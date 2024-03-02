@@ -18,7 +18,7 @@ class StockManager:
         # Implement a suitable hash function using the name or symbol of the stock
         hash_total = 0
         for i in range(len(kuerzel)):
-            hash_total = ord(kuerzel[i]) * (31**(len(kuerzel)-1-i))
+            hash_total += ord(kuerzel[i]) * (31**(len(kuerzel)-1-i))
         hash_value = hash_total%self.size
         return hash_value
 
