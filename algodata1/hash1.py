@@ -68,16 +68,35 @@ class StockManager:
         # Load the hashtable from a file
         pass
 
-# Beispiel-Nutzung des Stock Managers:
 stock_manager = StockManager()
 
-# Beispiel: Hinzufügen einer Aktie
-msft_stock = Stock("Microsoft", "123456", "MSFT")
-stock_manager.add_stock(msft_stock)
+while True:
+    print("\nMenu:")
+    print("1. Add Stock")
+    print("2. Search Stock")
+    print("3. Quit")
 
-# Beispiel: Suchen nach einer Aktie
-found_stock = stock_manager.search_stock("MSFT")
-if found_stock:
-    print(f"Found stock: {found_stock.name}")
-else:
-    print("Stock not found")
+    choice = input("Enter your choice: ")
+
+    if choice == '1':
+        name = input("Enter stock name: ")
+        wkn = input("Enter WKN: ")
+        kuerzel = input("Enter stock kuerzel: ")
+        new_stock = Stock(name, wkn, kuerzel)
+        stock_manager.add_stock(new_stock)
+        print("Stock added successfully!")
+
+    elif choice == '2':
+        search_key = input("Enter stock name or kuerzel: ")
+        found_stock = stock_manager.search_stock(search_key)
+        if found_stock:
+            print(f"Found stock: {found_stock.name} ({found_stock.kuerzel})")
+        else:
+            print("Stock not found.")
+
+    elif choice == '3':
+        print("Exiting the program.")
+        break
+
+    else:
+        print("Invalid choice. Please enter a valid option.")
