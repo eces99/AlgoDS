@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 class Stock:
-    def __init__(self, name="", wkn="", kuerzel=""):
+    def __init__(self, name, wkn, kuerzel):
         self.name = name
         self.wkn = wkn
         self.kuerzel = kuerzel
@@ -12,7 +12,7 @@ class Stock:
 class StockManager:
     def __init__(self, size=1301):
         self.size = size
-        self.table = [Stock()] * self.size
+        self.table = [Stock("","","")] * self.size
 
     def hash_function(self, kuerzel):
         # Implement a suitable hash function using the name or symbol of the stock
