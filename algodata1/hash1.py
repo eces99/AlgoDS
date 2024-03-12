@@ -12,9 +12,9 @@ class Stock:
 class StockManager:
     def __init__(self, size=1301):
         self.size = size
-        self.table = [Stock("","","")] * self.size
+        self.table = [Stock("", "", "")] * self.size
 
-    def hash_function(self, kuerzel):
+    def hash_function(self, kuerzel) -> int:
         # Implement a suitable hash function using the name or symbol of the stock
         hash_total = 0
         for i in range(len(kuerzel)):
@@ -36,8 +36,15 @@ class StockManager:
             attempt += 1
         self.table[index] = stock
 
-    def delete_stock(self, kuerzel):
+    def delete_stock(self, key):
         # Implement efficient deletion from the hashtable
+        index = int(self.hash_function(key))
+        attempt = 0
+        while self.table[index] is not None and self.table[index].kuerzel != key:
+            index = self.quadratic_probe(index, attempt)
+            attempt += 1
+        if self.table[index] is not None:
+            self.table[index] = Stock("", "", "")
         pass
 
     def import_stock_data(self, kuerzel, filename):
