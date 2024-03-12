@@ -91,6 +91,8 @@ while True:
         found_stock = stock_manager.search_stock(search_key)
         if found_stock:
             print(f"Found stock: {found_stock.name} ({found_stock.kuerzel})")
+            for i in found_stock.kursdaten:
+                    print(i)
         else:
             print("Stock not found.")
 
