@@ -45,7 +45,6 @@ class StockManager:
             attempt += 1
         if self.table[index] is not None:
             self.table[index] = Stock("", "", "")
-        pass
 
     def import_stock_data(self, kuerzel, filename):
         # Import stock data from a CSV file
@@ -80,8 +79,9 @@ stock_manager = StockManager()
 while True:
     print("\nMenu:")
     print("1. Add Stock")
-    print("2. Search Stock")
-    print("3. Quit")
+    print("2. Delete Stock")
+    print("3. Search Stock")
+    print("4. Quit")
 
     choice = input("Enter your choice: ")
 
@@ -97,13 +97,22 @@ while True:
         search_key = input("Enter stock name or kuerzel: ")
         found_stock = stock_manager.search_stock(search_key)
         if found_stock:
+            stock_manager.delete_stock(search_key)
+            print("Stock successfully deleted")
+        else:
+            print("Stock not found")
+
+    elif choice == '3':
+        search_key = input("Enter stock name or kuerzel: ")
+        found_stock = stock_manager.search_stock(search_key)
+        if found_stock:
             print(f"Found stock: {found_stock.name} ({found_stock.kuerzel})")
             for i in found_stock.kursdaten:
                     print(i)
         else:
             print("Stock not found.")
 
-    elif choice == '3':
+    elif choice == '4':
         print("Exiting the program.")
         break
 
