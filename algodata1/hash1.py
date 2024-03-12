@@ -3,16 +3,16 @@ import matplotlib.pyplot as plt
 
 
 class Stock:
-    def __init__(self, name, wkn, kuerzel):
+    def __init__(self, name="", wkn="", kuerzel=""):
         self.name = name
         self.wkn = wkn
         self.kuerzel = kuerzel
         self.kursdaten = []  # List to store price data for the past 30 days
 
 class StockManager:
-    def __init__(self, size=1000):
+    def __init__(self, size=1301):
         self.size = size
-        self.table = [None] * self.size
+        self.table = [Stock()] * self.size
 
     def hash_function(self, kuerzel):
         # Implement a suitable hash function using the name or symbol of the stock
