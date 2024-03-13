@@ -1,5 +1,5 @@
-import pandas as pd
-import matplotlib.pyplot as plt
+#import pandas as pd
+#import matplotlib.pyplot as plt
 
 
 class Stock:
@@ -12,9 +12,10 @@ class Stock:
 class StockManager:
     def __init__(self, size=1301):
         self.size = size
-        self.table = [Stock("", "", "")] * self.size
+        self.table = [None] * self.size
+        self.stockname = {}
 
-    def hash_function(self, kuerzel) -> int:
+    def hash_function(self, kuerzel):
         # Implement a suitable hash function using the name or symbol of the stock
         hash_total = 0
         for i in range(len(kuerzel)):
@@ -35,9 +36,14 @@ class StockManager:
             index = self.quadratic_probe(index, attempt)
             attempt += 1
         self.table[index] = stock
+        self.stockname[stock.name] = stock.kuerzel
 
     def delete_stock(self, key):
         # Implement efficient deletion from the hashtable
+        newkey = ""
+        if len(key) > 4:
+            newkey = self.stockname[key]
+            key = newkey
         index = int(self.hash_function(key))
         attempt = 0
         while self.table[index] is not None and self.table[index].kuerzel != key:
@@ -51,6 +57,10 @@ class StockManager:
         pass
 
     def search_stock(self, key):
+        newkey = ""
+        if len(key) > 4:
+            newkey = self.stockname[key]
+            key = newkey
         index = self.hash_function(key)
         attempt = 0
         index = int(index)
