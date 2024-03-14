@@ -113,11 +113,12 @@ class StockManager:
                 close_prices = [float(row[4]) for row in currentstock.kursdaten]
 
                 # Plot the data
+                plt.figure(figsize=(15, 10))
                 plt.plot(dates, close_prices)
                 plt.xlabel('Date')
                 plt.ylabel('Close Price')
                 plt.title(f'Stock Price Over Time ({currentstock.name})')
-                plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+                plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
                 plt.show()
             else:
                 print("No stock data available.")
