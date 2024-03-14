@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e8e7bb08-bf5f-4dd5-b45b-b773cfd6b139" name="Changes" comment="plotting done">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/algodata1/hash1.py" beforeDir="false" afterPath="$PROJECT_DIR$/algodata1/hash1.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +64,7 @@
       <updated>1709044563268</updated>
       <workItem from="1709044572285" duration="171000" />
       <workItem from="1709044840568" duration="1070000" />
-      <workItem from="1710435531199" duration="4610000" />
+      <workItem from="1710435531199" duration="6445000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <created>1709045152096</created>
@@ -88,7 +87,14 @@
       <option name="project" value="LOCAL" />
       <updated>1710440000221</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="plotting done">
+      <created>1710440703493</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1710440703493</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -124,6 +130,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="plotting done" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/AlgoDS$hash1.coverage" NAME="hash1 Coverage Results" MODIFIED="1710440493337" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/algodata1" />
+    <SUITE FILE_PATH="coverage/AlgoDS$hash1.coverage" NAME="hash1 Coverage Results" MODIFIED="1710441835919" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/algodata1" />
   </component>
 </project>
