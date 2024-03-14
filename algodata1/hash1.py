@@ -1,5 +1,5 @@
-#import pandas as pd
-#import matplotlib.pyplot as plt
+import pandas as pd
+import matplotlib.pyplot as plt
 import csv
 
 
@@ -64,6 +64,7 @@ class StockManager:
             for row in csvreader:
                 rows.append(row)
 
+
         currentstock = ""
         index = self.hash_function(kuerzel)
         attempt = 0
@@ -94,8 +95,34 @@ class StockManager:
             return None
 
     def plot_stock_data(self, kuerzel):
-        # Plot the closing prices of the last 30 days as ASCII graph
-        pass
+        # Plot the closing prices of the last 30 days
+        currentstock = None
+        index = self.hash_function(kuerzel)
+        attempt = 0
+        index = int(index)
+        while self.table[index] is not None and self.table[index].kuerzel != kuerzel:
+            index = self.quadratic_probe(index, attempt)
+            attempt += 1
+        if self.table[index] is not None:
+            currentstock = self.table[index]
+
+        if currentstock is not None:
+            if currentstock.kursdaten:
+                # Extract date and closing price data for plotting
+                dates = [row[0] for row in currentstock.kursdaten]
+                close_prices = [float(row[4]) for row in currentstock.kursdaten]
+
+                # Plot the data
+                plt.plot(dates, close_prices)
+                plt.xlabel('Date')
+                plt.ylabel('Close Price')
+                plt.title(f'Stock Price Over Time ({currentstock.name})')
+                plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+                plt.show()
+            else:
+                print("No stock data available.")
+        else:
+            print("Stock not found!")
 
     def save_to_file(self, filename):
         # Save the hashtable to a file
@@ -104,59 +131,71 @@ class StockManager:
     def load_from_file(self, filename):
         # Load the hashtable from a file
         pass
+def main():
+    stock_manager = StockManager()
 
-stock_manager = StockManager()
+    while True:
+        print("\nMenu:")
+        print("1. Add Stock")
+        print("2. Delete Stock")
+        print("3. Import Stock")
+        print("4. Search Stock")
+        print("5. Plot Stock")
+        print("8. Quit")
 
-while True:
-    print("\nMenu:")
-    print("1. Add Stock")
-    print("2. Delete Stock")
-    print("3. Import Stock")
-    print("4. Search Stock")
-    print("8. Quit")
+        choice = input("Enter your choice: ")
 
-    choice = input("Enter your choice: ")
+        if choice == '1':
+            name = input("Enter stock name: ")
+            wkn = input("Enter WKN: ")
+            kuerzel = input("Enter stock kuerzel: ")
+            new_stock = Stock(name, wkn, kuerzel)
+            stock_manager.add_stock(new_stock)
+            print("Stock added successfully!")
 
-    if choice == '1':
-        name = input("Enter stock name: ")
-        wkn = input("Enter WKN: ")
-        kuerzel = input("Enter stock kuerzel: ")
-        new_stock = Stock(name, wkn, kuerzel)
-        stock_manager.add_stock(new_stock)
-        print("Stock added successfully!")
+        elif choice == '2':
+            search_key = input("Enter stock name or kuerzel: ")
+            found_stock = stock_manager.search_stock(search_key)
+            if found_stock:
+                stock_manager.delete_stock(search_key)
+                print("Stock successfully deleted")
+            else:
+                print("Stock not found")
 
-    elif choice == '2':
-        search_key = input("Enter stock name or kuerzel: ")
-        found_stock = stock_manager.search_stock(search_key)
-        if found_stock:
-            stock_manager.delete_stock(search_key)
-            print("Stock successfully deleted")
+        elif choice == '3':
+            search_key = input("Enter stock name or kuerzel: ")
+            stock_filename = input("Enter the .csv file to be imported: ")
+            stock_manager.import_stock_data(search_key, stock_filename)
+            print("\""+ stock_filename + "\" successfully imported to the Stock " + search_key + "!")
+
+        elif choice == '4':
+            search_key = input("Enter stock name or kuerzel: ")
+            found_stock = stock_manager.search_stock(search_key)
+            if found_stock:
+                print(f"Found stock: {found_stock.name} ({found_stock.kuerzel})")
+                if found_stock.kursdaten:
+                    print("Date, Open, High, Low, Close, Adj. Close, Volume")
+                for row in found_stock.kursdaten[:1]:
+                    for col in row:
+                        print("%10s" % col, end=" "),
+                    print('\n')
+            else:
+                print("Stock not found.")
+
+        elif choice == "5":
+            search_key = input("Enter stock symbol: ")
+            found_stock = stock_manager.search_stock(search_key)
+            if found_stock:
+                stock_manager.plot_stock_data(search_key)
+            else:
+                print("Stock not found!")
+
+        elif choice == '8':
+            print("Exiting the program.")
+            break
+
         else:
-            print("Stock not found")
+            print("Invalid choice. Please enter a valid option.")
 
-    elif choice == '3':
-        search_key = input("Enter stock name or kuerzel: ")
-        stock_filename = input("Enter the .csv file to be imported: ")
-        stock_manager.import_stock_data(search_key, stock_filename)
-        print("\""+ stock_filename + "\" successfully imported to the Stock " + search_key + "!")
-
-    elif choice == '4':
-        search_key = input("Enter stock name or kuerzel: ")
-        found_stock = stock_manager.search_stock(search_key)
-        if found_stock:
-            print(f"Found stock: {found_stock.name} ({found_stock.kuerzel})")
-            if found_stock.kursdaten:
-                print("Date, Open, High, Low, Close, Adj. Close, Volume")
-            for row in found_stock.kursdaten[:1]:
-                for col in row:
-                    print("%10s" % col, end=" "),
-                print('\n')
-        else:
-            print("Stock not found.")
-
-    elif choice == '8':
-        print("Exiting the program.")
-        break
-
-    else:
-        print("Invalid choice. Please enter a valid option.")
+if __name__ == "__main__":
+    main()
