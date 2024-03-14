@@ -1,5 +1,6 @@
 #import pandas as pd
 #import matplotlib.pyplot as plt
+import csv
 
 
 class Stock:
@@ -54,7 +55,27 @@ class StockManager:
 
     def import_stock_data(self, kuerzel, filename):
         # Import stock data from a CSV file
-        pass
+        filename = "aktien_csvs/" + filename
+        fields = []
+        rows = []
+        with open(filename, 'r') as csvfile:
+            csvreader = csv.reader(csvfile)
+            fields = next(csvreader)
+            for row in csvreader:
+                rows.append(row)
+
+        currentstock = ""
+        index = self.hash_function(kuerzel)
+        attempt = 0
+        index = int(index)
+        while self.table[index] is not None and self.table[index].kuerzel != kuerzel:
+            index = self.quadratic_probe(index, attempt)
+            attempt += 1
+        if self.table[index] is not None:
+            currentstock = self.table[index]
+
+        currentstock.kursdaten = rows
+
 
     def search_stock(self, key):
         newkey = ""
@@ -90,8 +111,9 @@ while True:
     print("\nMenu:")
     print("1. Add Stock")
     print("2. Delete Stock")
-    print("3. Search Stock")
-    print("4. Quit")
+    print("3. Import Stock")
+    print("4. Search Stock")
+    print("8. Quit")
 
     choice = input("Enter your choice: ")
 
@@ -114,15 +136,25 @@ while True:
 
     elif choice == '3':
         search_key = input("Enter stock name or kuerzel: ")
+        stock_filename = input("Enter the .csv file to be imported: ")
+        stock_manager.import_stock_data(search_key, stock_filename)
+        print("\""+ stock_filename + "\" successfully imported to the Stock " + search_key + "!")
+
+    elif choice == '4':
+        search_key = input("Enter stock name or kuerzel: ")
         found_stock = stock_manager.search_stock(search_key)
         if found_stock:
             print(f"Found stock: {found_stock.name} ({found_stock.kuerzel})")
-            for i in found_stock.kursdaten:
-                    print(i)
+            if found_stock.kursdaten:
+                print("Date, Open, High, Low, Close, Adj. Close, Volume")
+            for row in found_stock.kursdaten[:1]:
+                for col in row:
+                    print("%10s" % col, end=" "),
+                print('\n')
         else:
             print("Stock not found.")
 
-    elif choice == '4':
+    elif choice == '8':
         print("Exiting the program.")
         break
 
