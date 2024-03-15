@@ -250,7 +250,6 @@ def main():
 # 6. SAVE <filename>: Programm speichert die Hashtabelle in eine Datei ab
         elif choice == '6':
             filename = input("Enter file name: ")
-            path = "./saved_tables/" + filename
             stock_manager.save_to_file(filename)
 
 
