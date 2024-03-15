@@ -132,9 +132,14 @@ def main():
             name = input("Enter stock name: ")
             wkn = input("Enter WKN: ")
             kuerzel = input("Enter stock kuerzel: ")
-            new_stock = Stock(name, wkn, kuerzel)
-            stock_manager.add_stock(new_stock)
-            print("Stock added successfully!")
+            stock_already_exists = stock_manager.search_stock(kuerzel)
+            stock_already_exists_2 = stock_manager.search_stock(name)
+            if not (stock_already_exists or stock_already_exists_2):
+                new_stock = Stock(name, wkn, kuerzel)
+                stock_manager.add_stock(new_stock)
+                print("Stock added successfully!")
+            else:
+                print("Stock already exists.")
 # Delete Stock
         elif choice == '2':
             search_key = input("Enter stock name or kuerzel: ")
