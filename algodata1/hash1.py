@@ -16,7 +16,7 @@ class StockManager:
     def __init__(self, size=1301):
         self.size = size
         self.table = [None] * self.size
-        self.stockname = {}
+        self.stockname = {} # Dictionary to match full stock names to their Kürzel
 
     def hash_function(self, kuerzel):
         # Implement a suitable hash function using the name or symbol of the stock
@@ -59,7 +59,7 @@ class StockManager:
             index = self.quadratic_probe(index, attempt)
             attempt += 1
         if self.table[index] is not None:
-            self.table[index] = Stock("", "", "")
+            self.table[index] = None
 
     def import_stock_data(self, currentstock, path):
         # Import stock data from a CSV file
@@ -166,6 +166,7 @@ class StockManager:
 
             # Insert the stock into the table
             self.table[index] = stock
+            self.stockname[stock.name] = stock.kuerzel
 
 
 def main():
