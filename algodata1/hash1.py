@@ -43,13 +43,15 @@ class StockManager:
     def delete_stock(self, key):
         # Implement efficient deletion from the hashtable
         newkey = ""
-        key = key.lower()
+
         if len(key) > 4:
+            key = key.title()
             if key in self.stockname:
                 newkey = self.stockname[key]
                 key = newkey
             else:
                 return None
+        key = key.upper()
         index = int(self.hash_function(key))
         attempt = 0
         while self.table[index] is not None and self.table[index].kuerzel != key:
@@ -67,18 +69,22 @@ class StockManager:
             fields = next(csvreader)
             for row in csvreader:
                 rows.append(row)
+                if len(rows) >= 30:
+                    break
 
         currentstock.kursdaten = rows
 
     def search_stock(self, key):
         newkey = ""
-        key = key.lower()
+
         if len(key) > 4:
+            key = key.title()
             if key in self.stockname:
                 newkey = self.stockname[key]
                 key = newkey
             else:
                 return None
+        key = key.upper()
         index = self.hash_function(key)
         attempt = 0
         index = int(index)
@@ -134,8 +140,8 @@ def main():
             name = input("Enter stock name: ")
             wkn = input("Enter WKN: ")
             kuerzel = input("Enter stock kuerzel: ")
-            name = name.lower()
-            kuerzel = kuerzel.lower()
+            name = name.title()
+            kuerzel = kuerzel.upper()
             stock_already_exists = stock_manager.search_stock(kuerzel)
             stock_already_exists_2 = stock_manager.search_stock(name)
             if not (stock_already_exists or stock_already_exists_2):
@@ -166,7 +172,7 @@ def main():
                 print(".csv file \"" + stock_filename + "\" does not exist.")
             elif found_stock:
                 stock_manager.import_stock_data(found_stock, path)
-                print(f"\"{stock_filename}\" successfully imported to the Stock {found_stock.name} ({found_stock_kuerzel})!")
+                print(f"\"{stock_filename}\" successfully imported to the Stock {found_stock.name} ({found_stock.kuerzel})!")
             else:
                 print(f"Stock {search_key} not found.")
 # Search Stock
