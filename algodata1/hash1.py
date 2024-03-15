@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import csv
+import os.path
 
 
 class Stock:
@@ -56,12 +57,11 @@ class StockManager:
         if self.table[index] is not None:
             self.table[index] = Stock("", "", "")
 
-    def import_stock_data(self, currentstock, filename):
+    def import_stock_data(self, currentstock, path):
         # Import stock data from a CSV file
-        filename = "aktien_csvs/" + filename
         fields = []
         rows = []
-        with open(filename, 'r') as csvfile:
+        with open(path, 'r') as csvfile:
             csvreader = csv.reader(csvfile)
             fields = next(csvreader)
             for row in csvreader:
@@ -145,17 +145,25 @@ def main():
             search_key = input("Enter stock name or kuerzel: ")
             found_stock = stock_manager.search_stock(search_key)
             if found_stock:
+                found_stock_name = found_stock.name
                 stock_manager.delete_stock(search_key)
-                print("Stock successfully deleted")
+                print(f"Stock {found_stock_name} ({search_key}) successfully deleted!")
             else:
-                print("Stock not found")
+                print(f"Stock {search_key} not found!")
 # Import Stock
         elif choice == '3':
             search_key = input("Enter stock name or kuerzel: ")
             stock_filename = input("Enter the .csv file to be imported: ")
             found_stock = stock_manager.search_stock(search_key)
-            stock_manager.import_stock_data(found_stock, stock_filename)
-            print("\""+ stock_filename + "\" successfully imported to the Stock " + search_key + "!")
+            path = "aktien_csvs/" + stock_filename
+            check_file = os.path.exists(path)
+            if not check_file:
+                print(".csv file \"" + stock_filename + "\" does not exist.")
+            elif found_stock:
+                stock_manager.import_stock_data(found_stock, path)
+                print(f"\"{stock_filename}\" successfully imported to the Stock {found_stock.name} ({search_key}) !")
+            else:
+                print(f"Stock {search_key} not found.")
 # Search Stock
         elif choice == '4':
             search_key = input("Enter stock name or kuerzel: ")
@@ -163,13 +171,13 @@ def main():
             if found_stock:
                 print(f"Found stock: {found_stock.name} ({found_stock.kuerzel})")
                 if found_stock.kursdaten:
-                    print("Date, Open, High, Low, Close, Adj. Close, Volume")
-                for row in found_stock.kursdaten[:1]:
-                    for col in row:
-                        print("%10s" % col, end=" "),
-                    print('\n')
+                    print("Date, Open, High, Low, Close, Adj Close, Volume")
+                    for row in found_stock.kursdaten[:1]:
+                        for col in row:
+                            print("%10s" % col, end=" "),
+                        print('\n')
             else:
-                print("Stock not found.")
+                print(f"Stock {search_key} not found.")
 # Plot Stock
         elif choice == "5":
             search_key = input("Enter stock name or kuerzel: ")
@@ -177,7 +185,7 @@ def main():
             if found_stock:
                 stock_manager.plot_stock_data(found_stock)
             else:
-                print("Stock not found!")
+                print(f"Stock {search_key} not found.")
 
         elif choice == '8':
             print("Exiting the program.")
