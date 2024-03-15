@@ -43,6 +43,7 @@ class StockManager:
     def delete_stock(self, key):
         # Implement efficient deletion from the hashtable
         newkey = ""
+        key = key.lower()
         if len(key) > 4:
             if key in self.stockname:
                 newkey = self.stockname[key]
@@ -71,6 +72,7 @@ class StockManager:
 
     def search_stock(self, key):
         newkey = ""
+        key = key.lower()
         if len(key) > 4:
             if key in self.stockname:
                 newkey = self.stockname[key]
@@ -132,22 +134,25 @@ def main():
             name = input("Enter stock name: ")
             wkn = input("Enter WKN: ")
             kuerzel = input("Enter stock kuerzel: ")
+            name = name.lower()
+            kuerzel = kuerzel.lower()
             stock_already_exists = stock_manager.search_stock(kuerzel)
             stock_already_exists_2 = stock_manager.search_stock(name)
             if not (stock_already_exists or stock_already_exists_2):
                 new_stock = Stock(name, wkn, kuerzel)
                 stock_manager.add_stock(new_stock)
-                print("Stock added successfully!")
+                print(f"Stock {name} ({kuerzel}) added successfully!")
             else:
-                print("Stock already exists.")
+                print(f"Stock {name} or {kuerzel} already exists.")
 # Delete Stock
         elif choice == '2':
             search_key = input("Enter stock name or kuerzel: ")
             found_stock = stock_manager.search_stock(search_key)
             if found_stock:
                 found_stock_name = found_stock.name
+                found_stock_kuerzel = found_stock.kuerzel
                 stock_manager.delete_stock(search_key)
-                print(f"Stock {found_stock_name} ({search_key}) successfully deleted!")
+                print(f"Stock {found_stock.name} ({found_stock.kuerzel}) successfully deleted!")
             else:
                 print(f"Stock {search_key} not found!")
 # Import Stock
@@ -161,7 +166,7 @@ def main():
                 print(".csv file \"" + stock_filename + "\" does not exist.")
             elif found_stock:
                 stock_manager.import_stock_data(found_stock, path)
-                print(f"\"{stock_filename}\" successfully imported to the Stock {found_stock.name} ({search_key}) !")
+                print(f"\"{stock_filename}\" successfully imported to the Stock {found_stock.name} ({found_stock_kuerzel})!")
             else:
                 print(f"Stock {search_key} not found.")
 # Search Stock
