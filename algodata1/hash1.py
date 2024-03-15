@@ -6,11 +6,11 @@ import ast
 
 
 class Stock:
-    def __init__(self, name, wkn, kuerzel):
+    def __init__(self, name, wkn, kuerzel, kursdaten=[]):
         self.name = name
         self.wkn = wkn
         self.kuerzel = kuerzel
-        self.kursdaten = []  # List to store price data for the past 30 days
+        self.kursdaten = kursdaten  # List to store price data for the past 30 days
 
 class StockManager:
     def __init__(self, size=1301):
@@ -151,8 +151,7 @@ class StockManager:
             kursdaten = ast.literal_eval(kursdaten)
 
             # Create a new Stock object
-            stock = Stock(name, wkn, kuerzel)
-            stock.kursdaten = kursdaten  # Assuming kursdaten is a list
+            stock = Stock(name, wkn, kuerzel, kursdaten)
 
             # Hash the stock's kuerzel to determine the index in the table
             index = self.hash_function(kuerzel)
@@ -250,14 +249,20 @@ def main():
 
 # 6. SAVE <filename>: Programm speichert die Hashtabelle in eine Datei ab
         elif choice == '6':
-            name_input = input("Enter file name: ")
-            stock_manager.save_to_file(name_input)
+            filename = input("Enter file name: ")
+            path = "./saved_tables/" + filename
+            stock_manager.save_to_file(filename)
 
 
 # 7. LOAD <filename>: Programm lädt die Hashtabelle aus einer Datei
         elif choice == '7':
-            file_name = input("Enter file name: ")
-            stock_manager.load_from_file(file_name)
+            filename = input("Enter file name: ")
+            path = "./saved_tables/" + filename
+            check_file = os.path.exists(path)
+            if check_file:
+                stock_manager.load_from_file(filename)
+            else:
+                print(f"File \"{filename}\" cannot be found.")
 
         elif choice == '8':
             print("Exiting the program.")
