@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import csv
 import os.path
+import ast
 
 
 class Stock:
@@ -115,12 +116,58 @@ class StockManager:
             print("No stock data available.")
 
     def save_to_file(self, filename):
-        # Save the hashtable to a file
-        pass
+        # Extracting relevant attributes from StockManager
+        data = []
+        for stock in self.table:
+            if stock is not None:  # Check if the stock is not None
+                data.append({
+                    'Name': stock.name,
+                    'WKN': stock.wkn,
+                    'Symbol': stock.kuerzel,
+                    'StockData': stock.kursdaten
+                })
+        # Construct the file path
+        file_path = "./saved_tables/" + filename
+        # Create a DataFrame from the extracted data
+        data = pd.DataFrame(data)
+        # Write the DataFrame to a CSV file
+        data.to_csv(file_path, index=False)
 
     def load_from_file(self, filename):
-        # Load the hashtable from a file
-        pass
+        # Construct the file path
+        file_path = "./saved_tables/" + filename
+
+        # Read the CSV file into a DataFrame
+        data = pd.read_csv(file_path)
+
+        # Iterate over the rows of the DataFrame and populate the StockManager table
+        for _, row in data.iterrows():
+            name = row['Name']
+            wkn = row['WKN']
+            kuerzel = row['Symbol']
+            kursdaten = row['StockData']
+
+            # Parse kursdaten_str from string to list of lists
+            kursdaten = ast.literal_eval(kursdaten)
+
+            # Create a new Stock object
+            stock = Stock(name, wkn, kuerzel)
+            stock.kursdaten = kursdaten  # Assuming kursdaten is a list
+
+            # Hash the stock's kuerzel to determine the index in the table
+            index = self.hash_function(kuerzel)
+
+            attempt = 0
+            # Use linear probing to find an empty slot in the table
+            while self.table[index] is not None:
+                index = int(index)
+                index = (index + attempt ** 2) % self.size
+                attempt += 1
+
+            # Insert the stock into the table
+            self.table[index] = stock
+
+
 def main():
     stock_manager = StockManager()
 
@@ -131,6 +178,8 @@ def main():
         print("3. Import Stock")
         print("4. Search Stock")
         print("5. Plot Stock")
+        print("6. Save Hash Table")
+        print("7. Load Hash Table")
         print("8. Quit")
 
         choice = input("Enter your choice: ")
@@ -197,6 +246,17 @@ def main():
                 stock_manager.plot_stock_data(found_stock)
             else:
                 print(f"Stock {search_key} not found.")
+
+# 6. SAVE <filename>: Programm speichert die Hashtabelle in eine Datei ab
+        elif choice == '6':
+            name_input = input("Enter file name: ")
+            stock_manager.save_to_file(name_input)
+
+
+# 7. LOAD <filename>: Programm lädt die Hashtabelle aus einer Datei
+        elif choice == '7':
+            file_name = input("Enter file name: ")
+            stock_manager.load_from_file(file_name)
 
         elif choice == '8':
             print("Exiting the program.")
