@@ -77,7 +77,6 @@ class StockManager:
 
     def search_stock(self, key):
         newkey = ""
-
         if len(key) > 6:
             key = key.title()
             if key in self.stockname:
@@ -111,7 +110,6 @@ class StockManager:
         plt.title(f'Stock Price Over Time ({currentstock.name})')
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
         plt.show()
-
 
     def save_to_file(self, filename):
         # Extracting relevant attributes from StockManager
@@ -151,21 +149,7 @@ class StockManager:
             # Create a new Stock object
             stock = Stock(name, wkn, kuerzel, kursdaten)
 
-            # Hash the stock's kuerzel to determine the index in the table
-            index = self.hash_function(kuerzel)
-
-            # Use quadratic probing to find an empty slot in the table
-            attempt = 0
-            while self.table[index] is not None:
-                index = int(index)
-                index = (index + attempt ** 2) % self.size
-                attempt += 1
-
-            # Insert the stock into the table
-            self.table[index] = stock
-            self.stockname[stock.name] = stock.kuerzel
-
-
+            self.add_stock(stock)
 def main():
     stock_manager = StockManager()
 
@@ -185,8 +169,18 @@ def main():
 # Add Stock
         if choice == '1':
             name = input("Enter stock name: ")
+            if name == '':
+                print("Name cannot be empty.")
+                continue
             wkn = input("Enter WKN: ")
+            if wkn == '':
+                print("WKN cannot be empty.")
+                continue
             kuerzel = input("Enter stock kuerzel: ")
+            if kuerzel == '':
+                print("Stock kuerzel cannot be empty.")
+                continue
+
             name = name.title()
             kuerzel = kuerzel.upper()
             stockkuerzel_already_exists = stock_manager.search_stock(kuerzel)
@@ -255,19 +249,28 @@ def main():
 
 # 6. SAVE <filename>: Programm speichert die Hashtabelle in eine Datei ab
         elif choice == '6':
-            filename = input("Enter file name: ")
-            stock_manager.save_to_file(filename)
+                filename = input("Enter file name: ")
+                if filename == '':
+                    print("Filename cannot be empty.")
+                    continue
+                stock_manager.save_to_file(filename)
+                print(f"Hashtable saved as \"{filename}\"!")
 
 # 7. LOAD <filename>: Programm lädt die Hashtabelle aus einer Datei
         elif choice == '7':
             filename = input("Enter file name: ")
             path = "./saved_tables/" + filename
             check_file = os.path.exists(path)
-            if check_file:
-                stock_manager.load_from_file(filename)
-                print(f"File \"{filename}\" successfully loaded!")
-            else:
+            if not check_file:
                 print(f"File \"{filename}\" cannot be found.")
+                continue
+            if os.path.getsize(path) < 34:
+                print(os.path.getsize(path))
+                print(f"File \"{filename}\" is empty, cannot be loaded.")
+                continue
+
+            stock_manager.load_from_file(filename)
+            print(f"File \"{filename}\" successfully loaded!")
 # Exit
         elif choice == '8':
             print("Exiting the program.")
