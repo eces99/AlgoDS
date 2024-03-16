@@ -227,16 +227,18 @@ def main():
         elif choice == '4':
             search_key = input("Enter stock name or kuerzel: ")
             found_stock = stock_manager.search_stock(search_key)
-            if found_stock:
-                print(f"Found stock: {found_stock.name} ({found_stock.kuerzel})")
-                if found_stock.kursdaten:
-                    print("Date, Open, High, Low, Close, Adj Close, Volume")
-                    for row in found_stock.kursdaten[:1]:
-                        for col in row:
-                            print("%10s" % col, end=" "),
-                        print('\n')
-            else:
+
+            if not found_stock:
                 print(f"Stock {search_key} not found.")
+                continue
+            print(f"Found stock: {found_stock.name} ({found_stock.kuerzel})")
+
+            if found_stock.kursdaten:
+                print("Date, Open, High, Low, Close, Adj Close, Volume")
+                for row in found_stock.kursdaten[:1]:
+                    for col in row:
+                        print("%10s" % col, end=" "),
+                    print('\n')
 
 # Plot Stock
         elif choice == "5":
