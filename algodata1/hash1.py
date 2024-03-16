@@ -99,21 +99,19 @@ class StockManager:
 
     def plot_stock_data(self, currentstock):
         # Plot the closing prices of the last 30 days
-        if currentstock.kursdaten:
-            # Extract date and closing price data for plotting
-            dates = [row[0] for row in currentstock.kursdaten]
-            close_prices = [float(row[4]) for row in currentstock.kursdaten]
+        # Extract date and closing price data for plotting
+        dates = [row[0] for row in currentstock.kursdaten]
+        close_prices = [float(row[4]) for row in currentstock.kursdaten]
 
-            # Plot the data
-            plt.figure(figsize=(15, 10))
-            plt.plot(dates, close_prices)
-            plt.xlabel('Date')
-            plt.ylabel('Close Price')
-            plt.title(f'Stock Price Over Time ({currentstock.name})')
-            plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
-            plt.show()
-        else:
-            print("No stock data available.")
+        # Plot the data
+        plt.figure(figsize=(15, 10))
+        plt.plot(dates, close_prices)
+        plt.xlabel('Date')
+        plt.ylabel('Close Price')
+        plt.title(f'Stock Price Over Time ({currentstock.name})')
+        plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
+        plt.show()
+
 
     def save_to_file(self, filename):
         # Extracting relevant attributes from StockManager
@@ -156,8 +154,8 @@ class StockManager:
             # Hash the stock's kuerzel to determine the index in the table
             index = self.hash_function(kuerzel)
 
+            # Use quadratic probing to find an empty slot in the table
             attempt = 0
-            # Use linear probing to find an empty slot in the table
             while self.table[index] is not None:
                 index = int(index)
                 index = (index + attempt ** 2) % self.size
@@ -191,25 +189,25 @@ def main():
             kuerzel = input("Enter stock kuerzel: ")
             name = name.title()
             kuerzel = kuerzel.upper()
-            stock_already_exists = stock_manager.search_stock(kuerzel)
-            stock_already_exists_2 = stock_manager.search_stock(name)
-            if not (stock_already_exists or stock_already_exists_2):
+            stockkuerzel_already_exists = stock_manager.search_stock(kuerzel)
+            stockname_already_exists = stock_manager.search_stock(name)
+            if not (stockkuerzel_already_exists or stockname_already_exists):
                 new_stock = Stock(name, wkn, kuerzel)
                 stock_manager.add_stock(new_stock)
                 print(f"Stock {name} ({kuerzel}) added successfully!")
             else:
                 print(f"Stock {name} or {kuerzel} already exists.")
+
 # Delete Stock
         elif choice == '2':
             search_key = input("Enter stock name or kuerzel: ")
             found_stock = stock_manager.search_stock(search_key)
             if found_stock:
-                found_stock_name = found_stock.name
-                found_stock_kuerzel = found_stock.kuerzel
                 stock_manager.delete_stock(search_key)
                 print(f"Stock {found_stock.name} ({found_stock.kuerzel}) successfully deleted!")
             else:
                 print(f"Stock {search_key} not found!")
+
 # Import Stock
         elif choice == '3':
             search_key = input("Enter stock name or kuerzel: ")
@@ -224,6 +222,7 @@ def main():
                 print(f"\"{stock_filename}\" successfully imported to the Stock {found_stock.name} ({found_stock.kuerzel})!")
             else:
                 print(f"Stock {search_key} not found.")
+
 # Search Stock
         elif choice == '4':
             search_key = input("Enter stock name or kuerzel: ")
@@ -238,20 +237,23 @@ def main():
                         print('\n')
             else:
                 print(f"Stock {search_key} not found.")
+
 # Plot Stock
         elif choice == "5":
             search_key = input("Enter stock name or kuerzel: ")
             found_stock = stock_manager.search_stock(search_key)
-            if found_stock:
-                stock_manager.plot_stock_data(found_stock)
-            else:
+            if not found_stock:
                 print(f"Stock {search_key} not found.")
+                continue
+            if not found_stock.kursdaten:
+                print(f"No stock data for {found_stock.name} ({found_stock.kuerzel}) available.")
+                continue
+            stock_manager.plot_stock_data(found_stock)
 
 # 6. SAVE <filename>: Programm speichert die Hashtabelle in eine Datei ab
         elif choice == '6':
             filename = input("Enter file name: ")
             stock_manager.save_to_file(filename)
-
 
 # 7. LOAD <filename>: Programm lädt die Hashtabelle aus einer Datei
         elif choice == '7':
@@ -262,7 +264,7 @@ def main():
                 stock_manager.load_from_file(filename)
             else:
                 print(f"File \"{filename}\" cannot be found.")
-
+# Exit
         elif choice == '8':
             print("Exiting the program.")
             break
