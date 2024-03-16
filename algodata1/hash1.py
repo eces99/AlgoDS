@@ -228,13 +228,14 @@ def main():
             search_key = input("Enter stock name or kuerzel: ")
             found_stock = stock_manager.search_stock(search_key)
 
-            if not found_stock:
+            if found_stock:
+                print(f"Found stock: {found_stock.name} ({found_stock.kuerzel})")
+            else:
                 print(f"Stock {search_key} not found.")
                 continue
-            print(f"Found stock: {found_stock.name} ({found_stock.kuerzel})")
 
             if found_stock.kursdaten:
-                print("Date, Open, High, Low, Close, Adj Close, Volume")
+                print(f"Date{' '*7}Open{' '*7}High{' '*7}Low{' '*8}Close{' '*6}Adj Close{' '*4}Volume")
                 for row in found_stock.kursdaten[:1]:
                     for col in row:
                         print("%10s" % col, end=" "),
@@ -264,6 +265,7 @@ def main():
             check_file = os.path.exists(path)
             if check_file:
                 stock_manager.load_from_file(filename)
+                print(f"File \"{filename}\" successfully loaded!")
             else:
                 print(f"File \"{filename}\" cannot be found.")
 # Exit
