@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e8e7bb08-bf5f-4dd5-b45b-b773cfd6b139" name="Changes" comment="clean up code print statements in main">
+    <list default="true" id="e8e7bb08-bf5f-4dd5-b45b-b773cfd6b139" name="Changes" comment="prevent empty inputs, prevent loading empty files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/algodata1/hash1.py" beforeDir="false" afterPath="$PROJECT_DIR$/algodata1/hash1.py" afterDir="false" />
     </list>
@@ -163,7 +163,23 @@
       <option name="project" value="LOCAL" />
       <updated>1710618737928</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="added print statement in main, duplicate stocks possible when loading hashtable which contains an already existing stock">
+      <option name="closed" value="true" />
+      <created>1710619948196</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1710619948196</updated>
+    </task>
+    <task id="LOCAL-00013" summary="prevent empty inputs, prevent loading empty files">
+      <option name="closed" value="true" />
+      <created>1710622798216</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1710622798216</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -203,7 +219,9 @@
     <MESSAGE value="stock symbols maximal 6 zeichen" />
     <MESSAGE value="clean up code" />
     <MESSAGE value="clean up code print statements in main" />
-    <option name="LAST_COMMIT_MESSAGE" value="clean up code print statements in main" />
+    <MESSAGE value="added print statement in main, duplicate stocks possible when loading hashtable which contains an already existing stock" />
+    <MESSAGE value="prevent empty inputs, prevent loading empty files" />
+    <option name="LAST_COMMIT_MESSAGE" value="prevent empty inputs, prevent loading empty files" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AlgoDS$hash1.coverage" NAME="hash1 Coverage Results" MODIFIED="1710441835919" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/algodata1" />

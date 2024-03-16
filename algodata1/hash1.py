@@ -169,15 +169,15 @@ def main():
 # Add Stock
         if choice == '1':
             name = input("Enter stock name: ")
-            if name == '':
+            if not name.strip():
                 print("Name cannot be empty.")
                 continue
             wkn = input("Enter WKN: ")
-            if wkn == '':
+            if not wkn.strip():
                 print("WKN cannot be empty.")
                 continue
             kuerzel = input("Enter stock kuerzel: ")
-            if kuerzel == '':
+            if not kuerzel.strip():
                 print("Stock kuerzel cannot be empty.")
                 continue
 
@@ -249,12 +249,12 @@ def main():
 
 # 6. SAVE <filename>: Programm speichert die Hashtabelle in eine Datei ab
         elif choice == '6':
-                filename = input("Enter file name: ")
-                if filename == '':
-                    print("Filename cannot be empty.")
-                    continue
-                stock_manager.save_to_file(filename)
-                print(f"Hashtable saved as \"{filename}\"!")
+            filename = input("Enter file name: ")
+            if not filename.strip():
+                print("Filename cannot be empty.")
+                continue
+            stock_manager.save_to_file(filename)
+            print(f"Hashtable saved as \"{filename}\"!")
 
 # 7. LOAD <filename>: Programm lädt die Hashtabelle aus einer Datei
         elif choice == '7':
