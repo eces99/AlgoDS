@@ -45,7 +45,7 @@ class StockManager:
         # Implement efficient deletion from the hashtable
         newkey = ""
 
-        if len(key) > 4:
+        if len(key) > 6:
             key = key.title()
             if key in self.stockname:
                 newkey = self.stockname[key]
@@ -78,7 +78,7 @@ class StockManager:
     def search_stock(self, key):
         newkey = ""
 
-        if len(key) > 4:
+        if len(key) > 6:
             key = key.title()
             if key in self.stockname:
                 newkey = self.stockname[key]
