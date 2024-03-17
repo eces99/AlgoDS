@@ -286,7 +286,6 @@ def main():
                 print(f"File \"{filename}\" cannot be found.")
                 continue
             if os.path.getsize(path) < 34: # 34 bytes -> filesize of an exported hashtable with empty inputs
-                print(os.path.getsize(path))
                 print(f"File \"{filename}\" is empty, cannot be loaded.")
                 continue
             print(f"File \"{filename}\" successfully loaded!")
