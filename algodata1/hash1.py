@@ -10,36 +10,38 @@ class Stock:
         self.name = name
         self.wkn = wkn
         self.kuerzel = kuerzel
-        self.kursdaten = kursdaten  # List to store price data for the past 30 days
+        self.kursdaten = kursdaten  # List to store stock data for the past 30 days
+
 
 class StockManager:
     def __init__(self, size=1301):
         self.size = size
         self.table = [None] * self.size
-        self.stockname = {} # Dictionary to match full stock names to their Kürzel
+        self.stockname = {}  # Dictionary to match full stock names to their Kuerzel
 
     def hash_function(self, kuerzel):
         # Implement a suitable hash function using the name or symbol of the stock
         hash_total = 0
         for i in range(len(kuerzel)):
-            hash_total += ord(kuerzel[i]) * (31**(len(kuerzel)-1-i))
-        hash_value = hash_total%self.size
+            hash_total += ord(kuerzel[i]) * (31 ** (len(kuerzel) - 1 - i))
+        hash_value = hash_total % self.size
         return hash_value
 
     def quadratic_probe(self, index, attempt):
         # Implement quadratic probing for collision resolution
         index = int(index)
-        return (index + attempt**2) % self.size
+        return (index + attempt ** 2) % self.size
 
     def add_stock(self, stock):
         index = self.hash_function(stock.kuerzel)
         index = int(index)
         attempt = 0
+        # Change index with quadratic probing in case of collision
         while self.table[index] is not None:
             index = self.quadratic_probe(index, attempt)
             attempt += 1
-        self.table[index] = stock
-        self.stockname[stock.name] = stock.kuerzel
+        self.table[index] = stock  # add stock/value to its key/index
+        self.stockname[stock.name] = stock.kuerzel  # Add stock name as key and kuerzel as value to dictionary
 
     def delete_stock(self, key):
         # Implement efficient deletion from the hashtable
@@ -48,18 +50,19 @@ class StockManager:
         if len(key) > 6:
             key = key.title()
             if key in self.stockname:
-                newkey = self.stockname[key]
+                newkey = self.stockname[key]  # If the key is the name, change key to name's symbol
                 key = newkey
             else:
                 print(f"Stock {key} not found!")
                 return None
-        key = key.upper()
+        key = key.upper()  # Uppercase key after changed to symbol
         index = int(self.hash_function(key))
         attempt = 0
+        # Quadratic probing while there is a found stock but input key doesn't match
         while self.table[index] is not None and self.table[index].kuerzel != key:
             index = self.quadratic_probe(index, attempt)
             attempt += 1
-        if self.table[index] is not None:
+        if self.table[index] is not None:  # If stock has been found and input key matches, delete stock
             print(f"Stock {self.table[index].name} ({self.table[index].kuerzel}) successfully deleted!")
             self.table[index] = None
         else:
@@ -67,11 +70,10 @@ class StockManager:
 
     def import_stock_data(self, currentstock, path):
         # Import stock data from a CSV file
-        fields = []
-        rows = []
+        rows = []  # Stock data from a CSV file stored in an array
         with open(path, 'r') as csvfile:
             csvreader = csv.reader(csvfile)
-            fields = next(csvreader)
+            # A single row from the CSV file is the stock data of a single day and one element in the array
             for row in csvreader:
                 rows.append(row)
                 if len(rows) >= 30:
@@ -84,18 +86,19 @@ class StockManager:
         if len(key) > 6:
             key = key.title()
             if key in self.stockname:
-                newkey = self.stockname[key]
+                newkey = self.stockname[key]  # If the key is the name, change key to name's symbol
                 key = newkey
             else:
                 return None
-        key = key.upper()
+        key = key.upper()  # Uppercase key after changed to symbol
         index = self.hash_function(key)
         attempt = 0
         index = int(index)
+        # Quadratic probing while there is a found stock but input key doesn't match
         while self.table[index] is not None and self.table[index].kuerzel != key:
             index = self.quadratic_probe(index, attempt)
             attempt += 1
-        if self.table[index] is not None:
+        if self.table[index] is not None:  # If stock has been found and input key matches, return stock
             return self.table[index]
         else:
             return None
@@ -119,7 +122,7 @@ class StockManager:
         # Extracting relevant attributes from StockManager
         data = []
         for stock in self.table:
-            if stock is not None:  # Check if the stock is not None
+            if stock is not None:  # Check if the stock is not None, only save non-empty table values
                 data.append({
                     'Name': stock.name,
                     'WKN': stock.wkn,
@@ -150,6 +153,7 @@ class StockManager:
             # Parse kursdaten_str from string to list of lists
             kursdaten = ast.literal_eval(kursdaten)
 
+            # Check if stock already exists in current hashtable before adding externally
             stockkuerzel_already_exists = self.search_stock(kuerzel)
             stockname_already_exists = self.search_stock(name)
             if not (stockkuerzel_already_exists or stockname_already_exists):
@@ -159,6 +163,7 @@ class StockManager:
                 print(f"Stock {name} ({kuerzel}) added successfully!")
             else:
                 print(f"Stock {name} or {kuerzel} already exists.")
+
 
 def main():
     stock_manager = StockManager()
@@ -176,8 +181,9 @@ def main():
 
         choice = input("Enter your choice: ")
 
-# Add Stock
+        # Add Stock
         if choice == '1':
+            # inputs with validation
             while True:
                 name = input("Enter stock name: ")
                 if not name.strip():
@@ -223,7 +229,7 @@ def main():
             search_key = input("Enter stock name or kuerzel: ")
             stock_manager.delete_stock(search_key)
 
-# Import Stock
+        # Import Stock
         elif choice == '3':
             search_key = input("Enter stock name or kuerzel: ")
             stock_filename = input("Enter the .csv file to be imported: ")
@@ -240,7 +246,7 @@ def main():
             print(f"\"{stock_filename}\" successfully imported to the Stock {found_stock.name} ({found_stock.kuerzel})!")
 
 
-# Search Stock
+        # Search Stock
         elif choice == '4':
             search_key = input("Enter stock name or kuerzel: ")
             found_stock = stock_manager.search_stock(search_key)
@@ -250,13 +256,13 @@ def main():
                 print(f"Stock {search_key} not found.")
                 continue
             if found_stock.kursdaten:
-                print(f"Date{' '*7}Open{' '*7}High{' '*7}Low{' '*8}Close{' '*6}Adj Close{' '*4}Volume")
+                print(f"Date{' ' * 7}Open{' ' * 7}High{' ' * 7}Low{' ' * 8}Close{' ' * 6}Adj Close{' ' * 4}Volume")
                 for row in found_stock.kursdaten[:1]:
                     for col in row:
                         print("%10s" % col, end=" "),
                     print('\n')
 
-# Plot Stock
+        # Plot Stock
         elif choice == "5":
             search_key = input("Enter stock name or kuerzel: ")
             found_stock = stock_manager.search_stock(search_key)
@@ -268,7 +274,7 @@ def main():
                 continue
             stock_manager.plot_stock_data(found_stock)
 
-# 6. SAVE <filename>: Programm speichert die Hashtabelle in eine Datei ab
+        # 6. SAVE <filename>: Programm speichert die Hashtabelle in eine Datei ab
         elif choice == '6':
             filename = input("Enter file name: ")
             if not filename.strip():
@@ -277,7 +283,7 @@ def main():
             stock_manager.save_to_file(filename)
             print(f"Hashtable saved as \"{filename}\"!")
 
-# 7. LOAD <filename>: Programm lädt die Hashtabelle aus einer Datei
+        # 7. LOAD <filename>: Programm lädt die Hashtabelle aus einer Datei
         elif choice == '7':
             filename = input("Enter file name: ")
             path = "./saved_tables/" + filename
@@ -285,19 +291,20 @@ def main():
             if not file_exists:
                 print(f"File \"{filename}\" cannot be found.")
                 continue
-            if os.path.getsize(path) < 34: # 34 bytes -> filesize of an exported hashtable with empty inputs
+            if os.path.getsize(path) < 34:  # 34 bytes -> filesize of an exported hashtable with empty inputs
                 print(f"File \"{filename}\" is empty, cannot be loaded.")
                 continue
             print(f"File \"{filename}\" successfully loaded!")
             stock_manager.load_from_file(filename)
 
-# Exit
+        # Exit
         elif choice == '8':
             print("Exiting the program.")
             break
 
         else:
             print("Invalid choice. Please enter a valid option.")
+
 
 if __name__ == "__main__":
     main()
