@@ -155,14 +155,14 @@ def main():
 
     while True:
         print("\nMenu:")
-        print("1. Add Stock")
-        print("2. Delete Stock")
-        print("3. Import Stock")
-        print("4. Search Stock")
-        print("5. Plot Stock")
-        print("6. Save Hash Table")
-        print("7. Load Hash Table")
-        print("8. Quit")
+        print("1. ADD")
+        print("2. DELETE")
+        print("3. IMPORT")
+        print("4. SEARCH")
+        print("5. PLOT")
+        print("6. SAVE")
+        print("7. LOAD")
+        print("8. QUIT")
 
         choice = input("Enter your choice: ")
 
