@@ -165,32 +165,48 @@ def main():
 
     while True:
         print("\nMenu:")
-        print("1. Add Stock")
-        print("2. Delete Stock")
-        print("3. Import Stock")
-        print("4. Search Stock")
-        print("5. Plot Stock")
-        print("6. Save Hash Table")
-        print("7. Load Hash Table")
-        print("8. Quit")
+        print("1. ADD")
+        print("2. DELETE")
+        print("3. IMPORT")
+        print("4. SEARCH")
+        print("5. PLOT")
+        print("6. SAVE")
+        print("7. LOAD")
+        print("8. QUIT")
 
         choice = input("Enter your choice: ")
 
 # Add Stock
         if choice == '1':
-            name = input("Enter stock name: ")
-            if not name.strip():
-                print("Name cannot be empty.")
-                continue
-            wkn = input("Enter WKN: ")
-            if not wkn.strip():
-                print("WKN cannot be empty.")
-                continue
-            kuerzel = input("Enter stock kuerzel: ")
-            if not kuerzel.strip():
-                print("Stock kuerzel cannot be empty.")
-                continue
+            while True:
+                name = input("Enter stock name: ")
+                if not name.strip():
+                    print("Name cannot be empty.")
+                    continue
+                if not name.isalpha():
+                    print("Stock name should only contain letters.")
+                    continue
 
+                wkn = input("Enter WKN: ")
+                if not wkn.strip():
+                    print("WKN cannot be empty.")
+                    continue
+                if not wkn.isdigit() or len(wkn) != 6:
+                    print("WKN should be a 6-digit number.")
+                    continue
+
+                kuerzel = input("Enter stock kuerzel: ")
+                if not kuerzel.strip():
+                    print("Stock kuerzel cannot be empty.")
+                    continue
+                if not kuerzel.isalpha():
+                    print("Kürzel should only contain letters.")
+                    continue
+
+                # If all inputs are valid, break the loop
+                break
+
+            # Now, you have valid inputs stored in 'name', 'wkn', and 'kuerzel'
             name = name.title()
             kuerzel = kuerzel.upper()
             stockkuerzel_already_exists = stock_manager.search_stock(kuerzel)
@@ -202,7 +218,7 @@ def main():
             else:
                 print(f"Stock {name} or {kuerzel} already exists.")
 
-# Delete Stock
+        # Delete Stock
         elif choice == '2':
             search_key = input("Enter stock name or kuerzel: ")
             stock_manager.delete_stock(search_key)
