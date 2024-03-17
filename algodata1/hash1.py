@@ -51,6 +51,7 @@ class StockManager:
                 newkey = self.stockname[key]
                 key = newkey
             else:
+                print(f"Stock {key} not found!")
                 return None
         key = key.upper()
         index = int(self.hash_function(key))
@@ -59,7 +60,10 @@ class StockManager:
             index = self.quadratic_probe(index, attempt)
             attempt += 1
         if self.table[index] is not None:
+            print(f"Stock {self.table[index].name} ({self.table[index].kuerzel}) successfully deleted!")
             self.table[index] = None
+        else:
+            print(f"Stock {key} not found!")
 
     def import_stock_data(self, currentstock, path):
         # Import stock data from a CSV file
@@ -146,10 +150,16 @@ class StockManager:
             # Parse kursdaten_str from string to list of lists
             kursdaten = ast.literal_eval(kursdaten)
 
-            # Create a new Stock object
-            stock = Stock(name, wkn, kuerzel, kursdaten)
+            stockkuerzel_already_exists = self.search_stock(kuerzel)
+            stockname_already_exists = self.search_stock(name)
+            if not (stockkuerzel_already_exists or stockname_already_exists):
+                # Create a new Stock object
+                stock = Stock(name, wkn, kuerzel, kursdaten)
+                self.add_stock(stock)
+                print(f"Stock {name} ({kuerzel}) added successfully!")
+            else:
+                print(f"Stock {name} or {kuerzel} already exists.")
 
-            self.add_stock(stock)
 def main():
     stock_manager = StockManager()
 
@@ -195,12 +205,7 @@ def main():
 # Delete Stock
         elif choice == '2':
             search_key = input("Enter stock name or kuerzel: ")
-            found_stock = stock_manager.search_stock(search_key)
-            if found_stock:
-                stock_manager.delete_stock(search_key)
-                print(f"Stock {found_stock.name} ({found_stock.kuerzel}) successfully deleted!")
-            else:
-                print(f"Stock {search_key} not found!")
+            stock_manager.delete_stock(search_key)
 
 # Import Stock
         elif choice == '3':
@@ -208,26 +213,26 @@ def main():
             stock_filename = input("Enter the .csv file to be imported: ")
             found_stock = stock_manager.search_stock(search_key)
             path = "aktien_csvs/" + stock_filename
-            check_file = os.path.exists(path)
-            if not check_file:
+            file_exists = os.path.exists(path)
+            if not file_exists:
                 print(".csv file \"" + stock_filename + "\" does not exist.")
-            elif found_stock:
-                stock_manager.import_stock_data(found_stock, path)
-                print(f"\"{stock_filename}\" successfully imported to the Stock {found_stock.name} ({found_stock.kuerzel})!")
-            else:
+                continue
+            if not found_stock:
                 print(f"Stock {search_key} not found.")
+                continue
+            stock_manager.import_stock_data(found_stock, path)
+            print(f"\"{stock_filename}\" successfully imported to the Stock {found_stock.name} ({found_stock.kuerzel})!")
+
 
 # Search Stock
         elif choice == '4':
             search_key = input("Enter stock name or kuerzel: ")
             found_stock = stock_manager.search_stock(search_key)
-
             if found_stock:
                 print(f"Found stock: {found_stock.name} ({found_stock.kuerzel})")
             else:
                 print(f"Stock {search_key} not found.")
                 continue
-
             if found_stock.kursdaten:
                 print(f"Date{' '*7}Open{' '*7}High{' '*7}Low{' '*8}Close{' '*6}Adj Close{' '*4}Volume")
                 for row in found_stock.kursdaten[:1]:
@@ -260,17 +265,17 @@ def main():
         elif choice == '7':
             filename = input("Enter file name: ")
             path = "./saved_tables/" + filename
-            check_file = os.path.exists(path)
-            if not check_file:
+            file_exists = os.path.exists(path)
+            if not file_exists:
                 print(f"File \"{filename}\" cannot be found.")
                 continue
-            if os.path.getsize(path) < 34:
+            if os.path.getsize(path) < 34: # 34 bytes -> filesize of an exported hashtable with empty inputs
                 print(os.path.getsize(path))
                 print(f"File \"{filename}\" is empty, cannot be loaded.")
                 continue
-
-            stock_manager.load_from_file(filename)
             print(f"File \"{filename}\" successfully loaded!")
+            stock_manager.load_from_file(filename)
+
 # Exit
         elif choice == '8':
             print("Exiting the program.")
