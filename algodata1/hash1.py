@@ -168,19 +168,35 @@ def main():
 
 # Add Stock
         if choice == '1':
-            name = input("Enter stock name: ")
-            if not name.strip():
-                print("Name cannot be empty.")
-                continue
-            wkn = input("Enter WKN: ")
-            if not wkn.strip():
-                print("WKN cannot be empty.")
-                continue
-            kuerzel = input("Enter stock kuerzel: ")
-            if not kuerzel.strip():
-                print("Stock kuerzel cannot be empty.")
-                continue
+            while True:
+                name = input("Enter stock name: ")
+                if not name.strip():
+                    print("Name cannot be empty.")
+                    continue
+                if not name.isalpha():
+                    print("Stock name should only contain letters.")
+                    continue
 
+                wkn = input("Enter WKN: ")
+                if not wkn.strip():
+                    print("WKN cannot be empty.")
+                    continue
+                if not wkn.isdigit() or len(wkn) != 6:
+                    print("WKN should be a 6-digit number.")
+                    continue
+
+                kuerzel = input("Enter stock kuerzel: ")
+                if not kuerzel.strip():
+                    print("Stock kuerzel cannot be empty.")
+                    continue
+                if not kuerzel.isalpha():
+                    print("Kürzel should only contain letters.")
+                    continue
+
+                # If all inputs are valid, break the loop
+                break
+
+            # Now, you have valid inputs stored in 'name', 'wkn', and 'kuerzel'
             name = name.title()
             kuerzel = kuerzel.upper()
             stockkuerzel_already_exists = stock_manager.search_stock(kuerzel)
@@ -192,7 +208,7 @@ def main():
             else:
                 print(f"Stock {name} or {kuerzel} already exists.")
 
-# Delete Stock
+        # Delete Stock
         elif choice == '2':
             search_key = input("Enter stock name or kuerzel: ")
             found_stock = stock_manager.search_stock(search_key)
