@@ -1,3 +1,5 @@
+import re
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import csv
@@ -12,12 +14,12 @@ class Stock:
         self.kuerzel = kuerzel
         self.kursdaten = kursdaten  # List to store stock data for the past 30 days
 
-
 class StockManager:
     def __init__(self, size=1301):
         self.size = size
         self.table = [None] * self.size
         self.stockname = {}  # Dictionary to match full stock names to their Kuerzel
+        self.num_table = 0
 
     def hash_function(self, kuerzel):
         # Implement a suitable hash function using the name or symbol of the stock
@@ -42,6 +44,7 @@ class StockManager:
             attempt += 1
         self.table[index] = stock  # add stock/value to its key/index
         self.stockname[stock.name] = stock.kuerzel  # Add stock name as key and kuerzel as value to dictionary
+        self.num_table += 1
 
     def delete_stock(self, key):
         # Implement efficient deletion from the hashtable
@@ -65,6 +68,7 @@ class StockManager:
         if self.table[index] is not None:  # If stock has been found and input key matches, delete stock
             print(f"Stock {self.table[index].name} ({self.table[index].kuerzel}) successfully deleted!")
             self.table[index] = None
+            self.num_table -= 1
         else:
             print(f"Stock {key} not found!")
 
@@ -185,8 +189,8 @@ def main():
                 if not name.strip():
                     print("Name cannot be empty.")
                     continue
-                if not name.isalpha():
-                    print("Stock name should only contain letters.")
+                if not re.search('[a-zA-Z]', name):
+                    print("Stock name should contain letters.")
                     continue
                 if len(name) < 6:
                     print("Stock name should be longer than 6 letters.")
@@ -275,6 +279,9 @@ def main():
 
         # 6. SAVE <filename>: Programm speichert die Hashtabelle in eine Datei ab
         elif choice == '6':
+            if stock_manager.num_table == 0:
+                print("Hash table is empty, nothing to save.")
+                continue
             filename = input("Enter file name: ")
             # Add .csv file extension to filename
             filename = filename + ".csv"
