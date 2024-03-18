@@ -229,6 +229,9 @@ def main():
 
         # Delete Stock
         elif choice == '2':
+            if stock_manager.num_table == 0:
+                print("Hash table is empty, nothing to delete.")
+                continue
             search_key = input("Enter stock name or kuerzel: ")
             stock_manager.delete_stock(search_key)
 

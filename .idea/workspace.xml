@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e8e7bb08-bf5f-4dd5-b45b-b773cfd6b139" name="Changes" comment="plotting done">
+    <list default="true" id="e8e7bb08-bf5f-4dd5-b45b-b773cfd6b139" name="Changes" comment="last changes done">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/algodata1/hash1.py" beforeDir="false" afterPath="$PROJECT_DIR$/algodata1/hash1.py" afterDir="false" />
     </list>
@@ -135,7 +135,14 @@
       <option name="project" value="LOCAL" />
       <updated>1710440703493</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="last changes done">
+      <created>1710781791002</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1710781791002</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -168,7 +175,8 @@
     <MESSAGE value="first commit" />
     <MESSAGE value="second commit" />
     <MESSAGE value="plotting done" />
-    <option name="LAST_COMMIT_MESSAGE" value="plotting done" />
+    <MESSAGE value="last changes done" />
+    <option name="LAST_COMMIT_MESSAGE" value="last changes done" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AlgoDS$hash1.coverage" NAME="hash1 Coverage Results" MODIFIED="1710781061437" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/algodata1" />
