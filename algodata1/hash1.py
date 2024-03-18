@@ -73,6 +73,7 @@ class StockManager:
         rows = []  # Stock data from a CSV file stored in an array
         with open(path, 'r') as csvfile:
             csvreader = csv.reader(csvfile)
+            next(csvreader)
             # A single row from the CSV file is the stock data of a single day and one element in the array
             for row in csvreader:
                 rows.append(row)
@@ -118,7 +119,7 @@ class StockManager:
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
         plt.show()
 
-    def save_to_file(self, filename):
+    def save_to_file(self, file_path):
         # Extracting relevant attributes from StockManager
         data = []
         for stock in self.table:
@@ -129,17 +130,12 @@ class StockManager:
                     'Symbol': stock.kuerzel,
                     'StockData': stock.kursdaten
                 })
-        # Construct the file path
-        file_path = "./saved_tables/" + filename
         # Create a DataFrame from the extracted data
         data = pd.DataFrame(data)
         # Write the DataFrame to a CSV file
         data.to_csv(file_path, index=False)
 
-    def load_from_file(self, filename):
-        # Construct the file path
-        file_path = "./saved_tables/" + filename
-
+    def load_from_file(self, file_path):
         # Read the CSV file into a DataFrame
         data = pd.read_csv(file_path)
 
@@ -191,6 +187,9 @@ def main():
                     continue
                 if not name.isalpha():
                     print("Stock name should only contain letters.")
+                    continue
+                if len(name) < 6:
+                    print("Stock name should be longer than 6 letters.")
                     continue
 
                 wkn = input("Enter WKN: ")
@@ -277,25 +276,30 @@ def main():
         # 6. SAVE <filename>: Programm speichert die Hashtabelle in eine Datei ab
         elif choice == '6':
             filename = input("Enter file name: ")
+            # Add .csv file extension to filename
+            filename = filename + ".csv"
+            # Construct the file path
+            file_path = "./saved_tables/" + filename
             if not filename.strip():
                 print("Filename cannot be empty.")
                 continue
-            stock_manager.save_to_file(filename)
+            stock_manager.save_to_file(file_path)
             print(f"Hashtable saved as \"{filename}\"!")
 
         # 7. LOAD <filename>: Programm lädt die Hashtabelle aus einer Datei
         elif choice == '7':
             filename = input("Enter file name: ")
-            path = "./saved_tables/" + filename
-            file_exists = os.path.exists(path)
+            # Construct the file path
+            file_path = "./saved_tables/" + filename
+            file_exists = os.path.exists(file_path)
             if not file_exists:
                 print(f"File \"{filename}\" cannot be found.")
                 continue
-            if os.path.getsize(path) < 34:  # 34 bytes -> filesize of an exported hashtable with empty inputs
+            if os.path.getsize(file_path) < 34:  # 34 bytes -> filesize of an exported hashtable with empty inputs
                 print(f"File \"{filename}\" is empty, cannot be loaded.")
                 continue
             print(f"File \"{filename}\" successfully loaded!")
-            stock_manager.load_from_file(filename)
+            stock_manager.load_from_file(file_path)
 
         # Exit
         elif choice == '8':
